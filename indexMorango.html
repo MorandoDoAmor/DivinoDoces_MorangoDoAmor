@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedido de Lanche | Sua Lanchonete</title>
+  <style>
+    /* Estilo inspirado no Burger King */
+    body {
+      font-family: 'Arial Black', Arial, sans-serif;
+      background-color: #ffe6f2;
+      color: #a03c7e;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background-color: #f8b6d6;
+      color: #a03c7e;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border-bottom: 4px solid #f48fb1;
+    }
+    .combo-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto auto auto;
+      gap: 20px 40px;
+      padding: 20px;
+      justify-content: center;
+    }
+    .combo-card {
+      background-color: #fff0fa;
+      border: 2px solid #f48fb1;
+      border-radius: 15px;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(240, 143, 177, 0.10);
+      transition: transform 0.3s ease;
+    }
+    .combo-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(240, 143, 177, 0.18);
+    }
+    .combo-image {
+      width: 100%;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      height: 200px;
+      object-fit: cover;
+      background: #fff0fa center center no-repeat;
+      display: block;
+    }
+    .combo-content {
+      padding: 15px;
+      text-align: center;
+    }
+    .combo-title {
+      font-size: 1.5rem;
+      color: #a03c7e;
+      margin-bottom: 10px;
+      font-weight: 900;
+    }
+    .combo-description {
+      font-size: 1rem;
+      color: #b97ca5;
+      margin-bottom: 15px;
+    }
+    .combo-price {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #e75480;
+      margin-bottom: 15px;
+    }
+    .order-button {
+      background-color: #e75480;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .order-button:hover {
+      background-color: #a03c7e;
+    }
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .combo-container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 15px 20px;
+        padding: 10px;
+      }
+      .combo-card {
+        width: 100%;
+      }
+    }
+    .free-delivery {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fff;
+      background-color: #e75480;
+      text-align: center;
+      margin: 20px auto 40px auto;
+      font-family: 'Arial Black', Arial, sans-serif;
+      border: 3px solid #e75480;
+      padding: 10px 0;
+      border-radius: 10px;
+      animation: moveUpAndDown 2s infinite alternate;
+      display: block;
+      width: fit-content;
+    }
+    @keyframes moveUpAndDown {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .site-footer {
+      background-color: #f8b6d6;
+      color: #a03c7e;
+      padding: 20px;
+      text-align: center;
+      font-family: 'Arial Black', Arial, sans-serif;
+      margin-top: 0;
+      border-top: 4px solid #f48fb1;
+    }
+    .footer-policy h3 {
+      margin-bottom: 10px;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #a03c7e;
+    }
+    .footer-policy p {
+      font-size: 0.9rem;
+      color: #a03c7e;
+      margin: 5px 0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fff0fa;
+      margin: 10% auto;
+      padding: 20px;
+      border: 2px solid #f48fb1;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 10px;
+      font-family: 'Arial Black', Arial, sans-serif;
+      color: #a03c7e;
+    }
+    .close {
+      color: #e75480;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover,
+    .close:focus {
+      color: #a03c7e;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+    }
+    .modal-content label {
+      font-weight: 700;
+    }
+    .modal-content input[type="text"],
+    .modal-content input[type="radio"] {
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+    .modal-content input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #e75480;
+      border-radius: 5px;
+      box-sizing: border-box;
+      color: #a03c7e;
+      font-weight: 700;
+    }
+    .modal-content input[type="radio"] {
+      accent-color: #e75480;
+      cursor: pointer;
+    }
+    .modal-content button {
+      background-color: #e75480;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .modal-content button:hover {
+      background-color: #a03c7e;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div style="font-size:2.2rem; font-weight:900; letter-spacing:2px; margin-bottom: 5px;">Divino Doces</div>
+    <img src="IMG_3042.jpg" alt="Logo Divino Doces" style="height: 80px; display: block; margin: 0 auto 10px auto;" />
+    <span style="font-size:1.1rem; font-weight:700;">Peça seu lanche aqui!</span>
+  </header>
+  <div class="free-delivery">Entregue grátis para toda Imperatriz</div>
+  <main>
+  <section class="combo-container" id="comboContainer">
+    <!-- Combos will be dynamically rendered here -->
+  </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-policy">
+      <h3>Política de Privacidade</h3>
+      <p>
+        Nós respeitamos a sua privacidade e estamos comprometidos em proteger seus dados pessoais.
+        Todas as informações coletadas são usadas apenas para processar pedidos e melhorar sua experiência.
+      </p>
+      <p>
+        Ao utilizar nosso site, você concorda com os termos desta política. Para mais informações, entre em contato conosco.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Modal Endereço -->
+  <div id="addressModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeAddress">&times;</span>
+      <h2>Preencha seu endereço</h2>
+      <form id="addressForm">
+        <label for="rua">Rua:</label><br />
+        <input type="text" id="rua" name="rua" required /><br /><br />
+        <label for="bairro">Bairro:</label><br />
+        <input type="text" id="bairro" name="bairro" required /><br /><br />
+        <label for="numero">Número da Casa:</label><br />
+        <input type="text" id="numero" name="numero" required /><br /><br />
+        <label for="telefone">Número de Telefone:</label><br />
+        <input type="text" id="telefone" name="telefone" required pattern="\(\d{2}\) \d{4,5}-\d{4}" placeholder="(99) 99999-9999" maxlength="15" /><br /><br />
+        <button type="submit">Continuar para pagamento</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Pagamento -->
+  <div id="paymentModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closePayment">&times;</span>
+      <h2>Escolha a forma de pagamento</h2>
+      <form id="paymentForm">
+        <div id="pixQrContainer" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 10px 0 20px 0;">
+          <img id="pixQrImg" src="./Arquivo_000.png" alt="QR Code Pix" style="max-width: 38px; width: 100%; border-radius: 8px; box-shadow: 0 1px 4px #f8b6d6; background: #fff; padding: 2px; margin-left: auto; margin-right: auto; display: block;" onerror="this.style.display='none';document.getElementById('pixQrError').style.display='block';" />
+          <div id="pixQrError" style="display:none; color:#d32f2f; font-weight:700; margin-top:10px;">QR Code não encontrado. Verifique se o arquivo <b>Arquivo_000.png</b> está na mesma pasta do site.</div>
+          <div style="font-size: 1rem; color: #a03c7e; margin-top: 8px; font-weight: 700;">Aponte a câmera do celular para pagar</div>
+        </div>
+        <button type="submit">Finalizar Pedido</button>
+      </form>
+    </div>
+  </div>
+
+<script>
+  // Exibe ou oculta o QR Code do Pix conforme a opção selecionada
+  document.addEventListener('DOMContentLoaded', function() {
+    const pixRadio = document.getElementById('pix');
+    const creditRadio = document.getElementById('creditCard');
+    const pixQrContainer = document.getElementById('pixQrContainer');
+    if (pixRadio && creditRadio && pixQrContainer) {
+      function togglePixQr() {
+        pixQrContainer.style.display = pixRadio.checked ? 'block' : 'none';
+      }
+      pixRadio.addEventListener('change', togglePixQr);
+      creditRadio.addEventListener('change', togglePixQr);
+      togglePixQr();
+    }
+  });
+</script>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const comboContainer = document.getElementById('comboContainer');
+      const addressModal = document.getElementById('addressModal');
+      const closeAddress = document.getElementById('closeAddress');
+      const addressForm = document.getElementById('addressForm');
+
+      let selectedComboName = '';
+      let selectedComboPrice = '';
+
+      // Tracking user activity
+      function trackUserActivity(event) {
+        let activityLog = JSON.parse(localStorage.getItem('userActivityLog')) || [];
+        const timestamp = new Date().toISOString();
+        activityLog.push({ event, timestamp });
+        localStorage.setItem('userActivityLog', JSON.stringify(activityLog));
+      }
+
+      // Track page load (user enters site)
+      trackUserActivity('page_load');
+
+      // Track page unload (user leaves site)
+      window.addEventListener('beforeunload', () => {
+        trackUserActivity('page_unload');
+      });
+
+      // Track navigation to address or payment pages
+      function trackNavigation(page) {
+        trackUserActivity(`navigate_${page}`);
+      }
+
+      // Override window.location.href to track navigation to pagamento.html
+      const originalLocationHref = window.location.href;
+      const originalAssign = window.location.assign;
+      window.location.assign = function(url) {
+        if (url.includes('pagamento.html')) {
+          trackNavigation('payment');
+        }
+        originalAssign.call(window.location, url);
+      };
+
+      // Track scroll depth
+      window.addEventListener('scroll', () => {
+        const scrollPosition = window.scrollY + window.innerHeight;
+        const pageHeight = document.documentElement.scrollHeight;
+        const scrollPercent = Math.floor((scrollPosition / pageHeight) * 100);
+        trackUserActivity(`scroll_${scrollPercent}%`);
+      });
+
+      function openAddressModal() {
+        addressModal.style.display = 'block';
+      }
+
+      function closeModals() {
+        addressModal.style.display = 'none';
+      }
+
+      function renderCombos() {
+        const defaultCombos = [
+          { name: "Morango do Amor", price: 8.00, image: "morango.jpeg", description: "É um morango por 8$", esgotado: false },
+          {
+            name: "Morango Gourmet",
+            price: 40.00,
+            image: "IMG_3043.jpg",
+            description: "É 8 morangos por 40$",
+            esgotado: false
+          }
+        ];
+
+        // Sempre exibe os combos padrões, ignorando o localStorage para evitar bugs
+        const combos = defaultCombos;
+
+        comboContainer.innerHTML = '';
+        combos.forEach(combo => {
+          const article = document.createElement('article');
+          article.className = 'combo-card';
+          if (combo.esgotado) {
+            article.innerHTML = `
+              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                <img src="${combo.image}" alt="${combo.name}" class="combo-image" style="width: 120px; height: 120px; object-fit: contain; margin: 20px auto 10px auto; display: block; background: none;" />
+                <div class="combo-content">
+                  <h2 class="combo-title">${combo.name}</h2>
+                  <p class="combo-description" style="color: #d32f2f; font-weight: bold;">${combo.description || ''}</p>
+                </div>
+              </div>
+            `;
+          } else {
+            article.innerHTML = `
+              <img src="${combo.image}" alt="${combo.name}" class="combo-image" />
+              <div class="combo-content">
+                <h2 class="combo-title">${combo.name}</h2>
+                <p class="combo-description">${combo.description || ''}</p>
+                <p class="combo-price">R$ ${combo.price.toFixed(2)}</p>
+                <button class="order-button" data-name="${combo.name}" data-price="${combo.price.toFixed(2)}">Pedir Agora</button>
+              </div>
+            `;
+          }
+          comboContainer.appendChild(article);
+        });
+
+        const orderButtons = document.querySelectorAll('.order-button');
+        orderButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+            selectedComboName = button.getAttribute('data-name');
+            selectedComboPrice = button.getAttribute('data-price');
+            openAddressModal();
+          });
+        });
+      }
+
+
+      // Máscara automática para telefone
+      const telefoneInput = document.getElementById('telefone');
+      telefoneInput.addEventListener('input', function(e) {
+        let value = telefoneInput.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.slice(0, 11);
+        if (value.length > 0) {
+          value = '(' + value;
+        }
+        if (value.length > 3) {
+          value = value.slice(0, 3) + ') ' + value.slice(3);
+        }
+        if (value.length > 10) {
+          value = value.slice(0, 10) + '-' + value.slice(10);
+        }
+        telefoneInput.value = value;
+      });
+
+      renderCombos();
+
+      closeAddress.addEventListener('click', closeModals);
+
+        addressForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+          // Get address info
+          const rua = document.getElementById('rua').value;
+          const bairro = document.getElementById('bairro').value;
+          const numero = document.getElementById('numero').value;
+          const telefone = document.getElementById('telefone').value;
+
+          // Build URL with combo and address info as parameters
+          const url = `pagamentoMorango.html?comboName=${encodeURIComponent(selectedComboName)}&comboPrice=${encodeURIComponent(selectedComboPrice)}&rua=${encodeURIComponent(rua)}&bairro=${encodeURIComponent(bairro)}&numero=${encodeURIComponent(numero)}&telefone=${encodeURIComponent(telefone)}`;
+
+          // Redirect to payment page
+          window.location.href = url;
+        });
+
+      window.addEventListener('click', function(event) {
+        if (event.target === addressModal) {
+          closeModals();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

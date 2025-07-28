@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagamento | Divino Doces</title>
+  <!-- Removido CSS antigo duplicado -->
+</head>
+<body>
+  <div class="pagamento-hero-bg">
+    <div class="pagamento-hero">
+      <div class="pagamento-hero-title">Pagamento</div>
+      <div class="pagamento-hero-sub">Morango do Amor</div>
+    </div>
+  </div>
+  <main>
+    <div class="pagamento-card" id="paymentSection" style="display:none;">
+      <div class="pagamento-info" id="paymentInfo"></div>
+      <div class="pagamento-valor"><span id="pixValue"></span></div>
+      <div class="pagamento-qr" style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <img id="qrCodeImg" src="./Arquivo_000.png" alt="QR Code Pix" class="pagamento-qr-img" />
+        <div class="pagamento-qr-legenda" style="text-align: center; width: 100%;">Aponte a câmera do celular para pagar</div>
+      </div>
+      <div class="pagamento-pix-copia">
+        <label for="pixCopiaCola" class="pagamento-pix-label">Pix copia e cola:</label>
+        <div class="pagamento-pix-copia-row">
+          <input id="pixCopiaCola" type="text" value="" readonly class="pagamento-pix-input" />
+          <button class="pagamento-pix-btn" onclick="navigator.clipboard.writeText(document.getElementById('pixCopiaCola').value);this.innerText='Copiado!';setTimeout(()=>this.innerText='Copiar',1500);return false;">Copiar</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <style>
+    body {
+      background: linear-gradient(135deg, #fff0fa 0%, #f8b6d6 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial Black', Arial, sans-serif;
+    }
+    .pagamento-hero-bg {
+      background: linear-gradient(90deg, #e75480 0%, #f8b6d6 100%);
+      padding: 0 0 2px 0;
+      border-radius: 0 0 32px 32px;
+      box-shadow: 0 2px 16px #f8b6d6;
+    }
+    .pagamento-hero {
+      text-align: center;
+      padding: 32px 0 0 0;
+    }
+    .pagamento-hero-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 8px #e75480;
+    }
+    .pagamento-hero-sub {
+      font-size: 1.4rem;
+      color: #fff0fa;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 4px #e75480;
+    }
+    .pagamento-card {
+      background: #fff;
+      max-width: 320px;
+      min-height: 380px;
+      margin: 32px auto 0 auto;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px #f8b6d6aa;
+      padding: 36px 18px 36px 18px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .pagamento-info {
+      font-size: 0.88rem;
+      color: #a03c7e;
+      margin-bottom: 2.5px;
+    }
+    .pagamento-valor {
+      font-size: 1rem;
+      color: #e75480;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+    .pagamento-valor span {
+      background: #fff0fa;
+      border-radius: 4px;
+      padding: 1px 4px;
+      color: #a03c7e;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+    .pagamento-qr {
+      margin-bottom: 18px;
+    }
+    .pagamento-qr-img {
+      width: 280px;
+      height: 280px;
+      min-width: 280px;
+      min-height: 280px;
+      max-width: 280px;
+      max-height: 280px;
+      display: block;
+      margin: 0 auto 2px auto;
+      border-radius: 0;
+      box-shadow: none;
+      background: #fff;
+      padding: 0;
+      border: 2px solid #fff;
+      object-fit: contain;
+      box-sizing: border-box;
+      image-rendering: pixelated;
+    }
+    .pagamento-qr-legenda {
+      font-size: 0.7rem;
+      color: #a03c7e;
+      margin-bottom: 4px;
+    }
+    .pagamento-pix-copia {
+      margin-top: 10px;
+    }
+    .pagamento-pix-label {
+      font-weight: 700;
+      color: #a03c7e;
+      font-size: 1rem;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .pagamento-pix-copia-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+    .pagamento-pix-input {
+      width: 108px;
+      padding: 3px;
+      font-size: 0.77rem;
+      border: 1px solid #f8b6d6;
+      border-radius: 5px;
+      color: #a03c7e;
+      background: #fff0fa;
+      text-align: center;
+      font-family: 'Arial Black', Arial, sans-serif;
+    }
+    .pagamento-pix-btn {
+      background: linear-gradient(90deg, #e75480 0%, #f8b6d6 100%);
+      color: #fff;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-weight: 900;
+      font-size: 0.77rem;
+      cursor: pointer;
+      box-shadow: 0 1px 3px #f8b6d6;
+      transition: background 0.2s;
+    }
+    .pagamento-pix-btn:active {
+      background: #e75480;
+    }
+    @media (max-width: 500px) {
+      .pagamento-card {
+        max-width: 98vw;
+        padding: 18px 4vw 18px 4vw;
+      }
+      .pagamento-qr-img {
+        width: 90vw;
+        max-width: 90vw;
+        height: auto;
+        min-width: 0;
+        min-height: 0;
+      }
+      .pagamento-pix-input {
+        width: 60vw;
+        min-width: 0;
+      }
+    }
+  </style>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pagamento - Morango</title>
+    <style>
+        /* Cores base do Morango */
+        :root {
+            --morango-light-red: #f28b82;
+            --morango-green: #81c784;
+            --morango-dark: #3e2723;
+            --morango-white: #ffffff;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--morango-white);
+            margin: 0;
+            padding: 0;
+            color: var(--morango-dark);
+        }
+        header {
+            background-color: var(--morango-light-red);
+            color: var(--morango-white);
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        main {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1rem;
+            border: 2px solid var(--morango-light-red);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(242, 139, 130, 0.3);
+        }
+        h2 {
+            color: var(--morango-light-red);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .combo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .combo-item {
+            border: 1px solid var(--morango-green);
+            border-radius: 6px;
+            padding: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--morango-green);
+            color: var(--morango-white);
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .combo-item:hover {
+            background-color: var(--morango-light-red);
+            color: var(--morango-white);
+        }
+        .combo-item.selected {
+            background-color: var(--morango-light-red);
+            color: var(--morango-white);
+        }
+        .payment-section {
+            border-top: 2px solid var(--morango-light-red);
+            padding-top: 1rem;
+        }
+        .payment-info {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .pix-code {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .pix-code img {
+            width: 180px;
+            height: 180px;
+            border: 2px solid var(--morango-light-red);
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+        }
+        .card-payment {
+            text-align: center;
+            font-style: italic;
+            color: var(--morango-dark);
+            border: 1px dashed var(--morango-light-red);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        .free-delivery {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--morango-white);
+            background-color: var(--morango-green);
+            text-align: center;
+            margin: 20px auto 40px auto;
+            font-family: 'Arial Black', Arial, sans-serif;
+            border: 3px solid var(--morango-green);
+            padding: 10px 0;
+            border-radius: 10px;
+            animation: moveUpAndDown 2s infinite alternate;
+            display: block;
+            width: fit-content;
+        }
+        @keyframes moveUpAndDown {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: var(--morango-dark);
+        }
+    </style>
+</head>
+<body>
+    
+    <footer>
+      <div style="display: flex; justify-content: center; gap: 18px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <span style="font-size: 2rem;">🔒</span>
+          <span style="font-size: 0.85rem; color: #a03c7e; font-weight: bold;">Compra Segura</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <span style="font-size: 2rem;">🛡️</span>
+          <span style="font-size: 0.85rem; color: #a03c7e; font-weight: bold;">Site Protegido</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <span style="font-size: 2rem;">✅</span>
+          <span style="font-size: 0.85rem; color: #a03c7e; font-weight: bold;">Proteção Contra Fraude</span>
+        </div>
+      </div>
+      &copy; 2025 Morango - Sistema de Pagamento
+    </footer>
+
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const paymentSection = document.getElementById('paymentSection');
+            const paymentInfo = document.getElementById('paymentInfo');
+            const pixValue = document.getElementById('pixValue');
+            const addressInfo = document.getElementById('addressInfo');
+            const qrCodeImg = document.getElementById('qrCodeImg');
+
+            const comboName = getQueryParam('comboName');
+            const comboPrice = getQueryParam('comboPrice');
+            const rua = getQueryParam('rua');
+            const bairro = getQueryParam('bairro');
+            const numero = getQueryParam('numero');
+            const referencia = getQueryParam('referencia');
+
+
+            // Pix copia e cola de cada combo
+            const pix8 = '00020101021226800014br.gov.bcb.pix2558pix.delbank.com.br/v2/cob/vcharge53374c6290ed4622899e40b025204000053039865802BR5907DELBANK6007ARACAJU62070503***6304F820';
+            const pix40 = '00020101021226800014br.gov.bcb.pix2558pix.delbank.com.br/v2/cob/vcharged962b499fdc84ee496315b7345204000053039865802BR5907DELBANK6007ARACAJU62070503***63043A9D';
+            const pixInput = document.getElementById('pixCopiaCola');
+
+            if (comboPrice === '8.00' || comboPrice === '8' || (comboName && comboName.toLowerCase().includes('amor'))) {
+                qrCodeImg.src = '8.png';
+                pixInput.value = pix8;
+            } else if (comboPrice === '40.00' || comboPrice === '40' || (comboName && comboName.toLowerCase().includes('gourmet'))) {
+                qrCodeImg.src = '40.png';
+                pixInput.value = pix40;
+            } else {
+                qrCodeImg.src = 'Arquivo_000.png'; // fallback
+                pixInput.value = '';
+            }
+
+            if (comboName && comboPrice) {
+                paymentSection.style.display = 'block';
+                paymentInfo.textContent = `Você escolheu: ${comboName} - Valor: R$ ${comboPrice}`;
+                pixValue.textContent = `Valor PIX: R$ ${comboPrice}`;
+
+                if (rua && bairro && numero && referencia) {
+                    addressInfo.textContent = `Endereço: Rua ${rua}, Bairro ${bairro}, Nº ${numero}, Referência: ${referencia}`;
+                } else {
+                    addressInfo.textContent = 'Endereço não informado.';
+                }
+            } else {
+                paymentSection.style.display = 'none';
+                document.body.innerHTML = '<h2 style="text-align:center; color: var(--morango-light-red); margin-top: 2rem;">Nenhum combo selecionado. Por favor, volte para a página inicial e escolha um combo.</h2>';
+            }
+        });
+    </script>
+</body>
+</html>
